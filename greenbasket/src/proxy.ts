@@ -6,7 +6,7 @@ import { auth } from "./auth";
 export async function proxy(req:NextRequest){
 
     const {pathname}=req.nextUrl;
-    console.log(pathname);
+    // console.log(pathname);
     const publicRoutes=["/login","/register","/api/auth"];
 
     if(publicRoutes.some((path)=>pathname.startsWith(path))){
