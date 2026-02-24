@@ -162,19 +162,48 @@ getOrder()
   },[messages])
 
 
-  const getSuggestions=async()=>{
-    try {
-      setLoading(true)
-      const lastMessage=messages?.filter(m=>m.senderId.toString() !== userData?._id.toString())?.at(-1)
-      const result=await axios.post("/api/chat/ai_suggestions",{message:lastMessage?.text, role:"user"})
+  // const getSuggestions=async()=>{
+  //   try {
+  //     setLoading(true)
+  //     const lastMessage=messages?.filter(m=>m.senderId.toString() !== userData?._id.toString())?.at(-1)
+  //     const result=await axios.post("/api/chat/ai_suggestions",{message:lastMessage?.text, role:"user"})
       
-      setSuggestions(result.data)
+  //     setSuggestions(result.data)
+  //     setLoading(false)
+  //   } catch (error) {
+  //     console.log(error);
+  //     setLoading(false)
+  //   }
+  // }
+
+  const getSuggestions = async () => {
+  try {
+    if (!messages || !userData?._id) return
+
+    setLoading(true)
+
+    const lastMessage = messages
+      .filter(m => m?.senderId?.toString() !== userData._id?.toString())
+      .at(-1)
+
+    if (!lastMessage?.text) {
       setLoading(false)
-    } catch (error) {
-      console.log(error);
-      setLoading(false)
+      return
     }
+
+    const result = await axios.post("/api/chat/ai_suggestions", {
+      message: lastMessage.text,
+      role: "user",
+    })
+
+    setSuggestions(result.data)
+    setLoading(false)
+  } catch (error) {
+    console.log(error)
+    setLoading(false)
   }
+}
+  
 
   return (
     <div className='w-full min-h-screen bg-linear-to-b from-green-50 to-white'>
