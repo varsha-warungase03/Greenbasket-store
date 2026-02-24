@@ -150,48 +150,21 @@ getOrder()
   },[messages])
 
 
-  // const getSuggestions=async()=>{
-  //   try {
-  //     setLoading(true)
-  //     const lastMessage=messages?.filter(m=>m.senderId.toString() !== userData?._id.toString())?.at(-1)
-  //     const result=await axios.post("/api/chat/ai_suggestions",{message:lastMessage?.text, role:"user"})
+  const getSuggestions=async()=>{
+    try {
+      setLoading(true)
+      const lastMessage=messages?.filter(m=>m.senderId.toString() !== userData?._id)?.at(-1)
+      const result=await axios.post("/api/chat/ai_suggestions",{message:lastMessage?.text, role:"user"})
       
-  //     setSuggestions(result.data)
-  //     setLoading(false)
-  //   } catch (error) {
-  //     console.log(error);
-  //     setLoading(false)
-  //   }
-  // }
-
-  const getSuggestions = async () => {
-  try {
-    if (!messages || !userData?._id) return
-
-    setLoading(true)
-
-    const lastMessage = messages
-      .filter(m => m?.senderId !== userData?._id)
-      .at(-1)
-
-    if (!lastMessage?.text) {
+      setSuggestions(result.data)
       setLoading(false)
-      return
+    } catch (error) {
+      console.log(error);
+      setLoading(false)
     }
-
-    const result = await axios.post("/api/chat/ai_suggestions", {
-      message: lastMessage.text,
-      role: "user",
-    })
-
-    setSuggestions(result.data)
-    setLoading(false)
-  } catch (error) {
-    console.log(error)
-    setLoading(false)
   }
-}
 
+  
   useEffect(()=>{
     const socket=getSocket()
     socket.emit("join-room",orderId?.toString())
