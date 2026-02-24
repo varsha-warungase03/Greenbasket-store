@@ -171,7 +171,7 @@ getOrder()
     setLoading(true)
 
     const lastMessage = messages
-      .filter(m => m?.senderId?.toString() !== userData?._id)
+      .filter(m => m?.senderId !== userData?._id)
       .at(-1)
 
     if (!lastMessage?.text) {
