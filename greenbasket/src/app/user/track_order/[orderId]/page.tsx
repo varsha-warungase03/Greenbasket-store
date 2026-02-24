@@ -153,7 +153,7 @@ getOrder()
   const getSuggestions=async()=>{
     try {
       setLoading(true)
-      const lastMessage=messages?.filter(m=>m.senderId.toString() !== userData?._id)?.at(-1)
+      const lastMessage=messages?.filter(m=>m?.senderId && m.senderId.toString() !== userData?._id)?.at(-1)
       const result=await axios.post("/api/chat/ai_suggestions",{message:lastMessage?.text, role:"user"})
       
       setSuggestions(result.data)
