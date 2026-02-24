@@ -61,7 +61,7 @@ const Trackorder = ({params}:{params:{orderId:string}}) => {
   const [userLocation,setUserlocation]=useState<ILocation>({latitude:0,longitude:0})
   const [deliveryLocation,setDeliveryBoyLocation]=useState<ILocation>({latitude:0,longitude:0})
   const [newMessage,setNewmessage]=useState("")
-  const [messages,setMessages]=useState<IMessage[]>()
+  const [messages,setMessages]=useState<IMessage[]>([])
   const chatBoxRef=useRef<HTMLDivElement>(null)
   const [suggestions,setSuggestions]=useState([
     "hello", "thank you", "hii"
@@ -69,19 +69,7 @@ const Trackorder = ({params}:{params:{orderId:string}}) => {
   
   const router=useRouter()
 
-  useEffect(()=>{
-    const socket=getSocket()
-    socket.emit("join-room",orderId?.toString())
-
-    socket.on("send-message",(message)=>{
-      if(message.roomId===orderId){
-        setMessages((prev)=>[...prev!,message])
-      }
-    })
-    return () => {
-      socket.off("send-message")  
-    }
-  },[])
+  
 
 
   const sendMsg=()=>{
@@ -183,7 +171,7 @@ getOrder()
     setLoading(true)
 
     const lastMessage = messages
-      .filter(m => m?.senderId?.toString() !== userData._id?.toString())
+      .filter(m => m?.senderId?.toString() !== userData?._id)
       .at(-1)
 
     if (!lastMessage?.text) {
@@ -203,7 +191,20 @@ getOrder()
     setLoading(false)
   }
 }
-  
+
+  useEffect(()=>{
+    const socket=getSocket()
+    socket.emit("join-room",orderId?.toString())
+
+    socket.on("send-message",(message)=>{
+      if(message.roomId===orderId){
+        setMessages((prev)=>[...prev,message])
+      }
+    })
+    return () => {
+      socket.off("send-message")  
+    }
+  },[])
 
   return (
     <div className='w-full min-h-screen bg-linear-to-b from-green-50 to-white'>
