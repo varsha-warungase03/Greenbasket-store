@@ -20,7 +20,7 @@ const Login = () => {
     const [loading,setLoading]=useState(false);
     const router=useRouter();
     const session=useSession()
-    console.log(session);
+    // console.log(session);
 
     const handleLogin=async(e:React.FormEvent)=>{
         e.preventDefault();
